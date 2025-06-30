@@ -1,0 +1,3 @@
+python-dotenv
+psutil
+python-nmap   
