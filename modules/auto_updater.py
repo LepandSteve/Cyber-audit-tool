@@ -1,11 +1,13 @@
 import requests
 import os
+import sys
 import subprocess
+import tempfile
 from pathlib import Path
 from tkinter import messagebox
 from modules.version_checker import check_latest_version
 
-APP_VERSION = "1.1.1"  # Change this for every new release
+APP_VERSION = "1.1.1"  # Update this on each release
 VERSION_URL = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
 def run_auto_updater():
@@ -25,28 +27,37 @@ def run_auto_updater():
                 if not download_url:
                     raise Exception("No download URL provided.")
 
-                # Save installer to user's Downloads folder
+                # ✅ Download to Downloads folder
                 downloads_dir = Path.home() / "Downloads"
                 downloads_dir.mkdir(parents=True, exist_ok=True)
                 installer_path = downloads_dir / "CyberAuditInstaller.exe"
 
-                # Download the installer file
+                # ✅ Download the installer file
                 with requests.get(download_url, stream=True) as r:
                     r.raise_for_status()
                     with open(installer_path, "wb") as f:
                         for chunk in r.iter_content(chunk_size=8192):
                             f.write(chunk)
 
-                # Confirm download success
-                messagebox.showinfo("Installer Downloaded", f"Installer saved to: {installer_path}")
+                # ✅ Create a temporary Python script that launches the installer after delay
+                temp_script = tempfile.NamedTemporaryFile(delete=False, suffix=".py")
+                temp_script.write(f"""
+import time
+import subprocess
 
-                # Launch installer in new process (must be done BEFORE we exit)
-                subprocess.Popen(["start", "", str(installer_path)], shell=True)
+time.sleep(3)  # Wait a bit for the current app to fully exit
+subprocess.run(["{installer_path}"], shell=True)
+""".encode('utf-8'))
+                temp_script.close()
 
-                # Gracefully and safely exit app to avoid DLL loading issues
-                os._exit(0)
+                # ✅ Launch the temp script with system Python
+                subprocess.Popen(["python", temp_script.name], shell=True)
+
+                # ✅ Exit the current app
+                messagebox.showinfo("Installer Starting", "Installer will launch shortly. Please follow the on-screen instructions.")
+                sys.exit(0)
 
             except Exception as e:
-                messagebox.showerror("Update Error", f"❌ Failed to download or run installer:\n\n{e}")
+                messagebox.showerror("Update Error", f"Failed to download or run installer:\n{e}")
     else:
         messagebox.showinfo("No Update", update_info["message"])
