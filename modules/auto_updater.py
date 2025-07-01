@@ -6,7 +6,7 @@ from pathlib import Path
 from tkinter import messagebox
 from modules.version_checker import check_latest_version
 
-APP_VERSION = "1.1.0"  # Change this each time you release
+APP_VERSION = "1.1.1"  # Change this each time you release
 VERSION_URL = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
 def run_auto_updater():
