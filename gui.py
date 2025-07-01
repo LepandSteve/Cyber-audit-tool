@@ -139,7 +139,7 @@ class CyberAuditGUI(tk.Tk):
 
         self.btn_check_version = add_button("Check The Version", self.check_version, "#673ab7")
         self.btn_check_version.pack(side=tk.LEFT, padx=10)
-        self.btn_update = add_button("Auto Update", self.run_auto_update, "#ff9800")
+        self.btn_update = add_button("Auto Update", self.run_auto_updater, "#ff9800")
         self.btn_update.pack (side=tk.LEFT, padx=10)
 
         self.progress = ttk.Progressbar(self, orient="horizontal", mode="determinate", length=800)
@@ -306,7 +306,7 @@ class CyberAuditGUI(tk.Tk):
             messagebox.showerror("Export Error", f"Failed to export report:\n{e}")
 
     def check_version(self):
-        current_version = "1.0.0"
+        current_version = "1.1.1"
         version_info_url = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
         result = check_latest_version(current_version, version_info_url)

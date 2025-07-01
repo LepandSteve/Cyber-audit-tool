@@ -5,7 +5,7 @@ a = Analysis(
     ['gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('dgdi_logo.png', '.')],
+    datas=[('data/vuln_db.json', 'data'),('dgdi_logo.png','.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

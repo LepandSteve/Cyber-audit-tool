@@ -1,23 +1,17 @@
 """
 os_detection.py
 
-Attempts to infer the target operating system based on service banners.
+Attempts to infer the target operating system based on service banners and reverse DNS hostname.
 """
 
 from collections import Counter
 from typing import List, Tuple, Optional, Dict
+from modules.reverse_DNS import reverse_dns_lookup  # ✅ Import reverse DNS
+from utils.ip_utils import is_private_ip  # Ensure you have this to confirm IP type
 
 def detect_os_from_banners(banner_list: List[Tuple[int, str]]) -> Tuple[Optional[Tuple[str, int]], str]:
     """
     Analyze service banners to guess the most likely operating system.
-
-    Args:
-        banner_list: List of tuples (port, banner_string).
-
-    Returns:
-        A tuple:
-          - Most common OS guess and its count, or None if no guess.
-          - A human-readable details string.
     """
     os_guesses = []
 
@@ -56,11 +50,30 @@ def run_audit(
     shared_data: Optional[Dict] = None
 ) -> dict:
     """
-    Audit entry point for OS detection based on service banners.
-
-    Returns a dictionary with score, status, details, and remediation.
+    Audit entry point for OS detection based on service banners and optional reverse DNS enhancement.
     """
     banner_list = banners or []
+    extra_note = ""
+
+    if ip and not (is_private or (shared_data and shared_data.get("is_private")) or is_private_ip(ip)):
+        try:
+            dns_result = reverse_dns_lookup(ip)
+            if dns_result["status"] == "Pass":
+                hostname = dns_result["details"].split("→ Hostname:")[-1].strip()
+                extra_note = f"🌐 Reverse DNS Suggests: {hostname}"
+
+                # Try inferring OS from the hostname
+                hostname_lower = hostname.lower()
+                if "windows" in hostname_lower:
+                    banner_list.append((0, "Windows Reverse DNS"))
+                elif "ubuntu" in hostname_lower:
+                    banner_list.append((0, "Ubuntu Reverse DNS"))
+                elif "linux" in hostname_lower:
+                    banner_list.append((0, "Linux Reverse DNS"))
+                elif "centos" in hostname_lower:
+                    banner_list.append((0, "CentOS Reverse DNS"))
+        except Exception as e:
+            extra_note = f"⚠️ Reverse DNS check failed: {e}"
 
     try:
         most_common, details = detect_os_from_banners(banner_list)
@@ -71,42 +84,34 @@ def run_audit(
             "details": f"❗ Exception during OS detection: {e}",
             "remediation": (
                 "Check banner data format and audit environment.\n"
-                "Consider using active OS fingerprinting tools like nmap -O."
+                "Consider using active OS fingerprinting tools like `nmap -O`."
             )
         }
 
-    if most_common is None:
-        return {
-            "score": 5.0,
-            "status": "Info",
-            "details": details,
-            "remediation": (
-                "⚠️ Unable to infer OS from available service banners.\n"
-                "🔍 Use active OS fingerprinting (e.g., `nmap -O`) or increase banner verbosity."
-            )
-        }
+    if extra_note:
+        details += f"\n\n{extra_note}"
 
-    if most_common[0] == "Unknown":
+    if most_common is None or most_common[0] == "Unknown":
         return {
             "score": 6.0,
             "status": "Info",
             "details": details,
             "remediation": (
-                "⚠️ Service banners appear generic or intentionally obfuscated.\n"
-                "💡 Consider relaxing banner restrictions during internal audits or use advanced fingerprinting."
+                "⚠️ Service banners appear generic or OS could not be identified.\n"
+                "💡 Use active fingerprinting tools like Nmap (-O) or check reverse DNS manually."
             )
         }
 
     if most_common[1] >= 2:
         score = 10.0
         status = "Pass"
-        remediation = "✅ OS consistently identified across multiple services. No further action needed."
+        remediation = "✅ OS consistently identified across multiple sources. No action needed."
     else:
         score = 8.0
         status = "Info"
         remediation = (
-            "ℹ️ OS inferred from only one banner.\n"
-            "🔍 Validate using complementary methods like SMB, SSH, RDP, or tools like Nmap."
+            "ℹ️ OS inferred from limited information.\n"
+            "🔍 Consider verifying with SMB, SSH, RDP, or Nmap (-O)."
         )
 
     return {
@@ -117,13 +122,12 @@ def run_audit(
     }
 
 if __name__ == "__main__":
-    # Example usage
     test_banners = [
         (80, "Apache/2.4.41 (Ubuntu)"),
         (22, "OpenSSH_7.6p1 Ubuntu-4ubuntu0.3"),
         (443, "nginx/1.18.0 (Ubuntu)")
     ]
-    result = run_audit(banners=test_banners)
+    result = run_audit(ip="8.8.8.8", banners=test_banners)
     print(f"Score: {result['score']}")
     print(f"Status: {result['status']}")
     print("Details:\n" + result['details'])
