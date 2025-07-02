@@ -306,7 +306,7 @@ class CyberAuditGUI(tk.Tk):
             messagebox.showerror("Export Error", f"Failed to export report:\n{e}")
 
     def check_version(self):
-        current_version = "1.1.1"  # Your current version here
+        current_version = "1.1.2"  # Your current version here
         version_info_url = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
         try:
