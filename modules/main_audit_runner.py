@@ -83,6 +83,18 @@ def run_full_audit(target_ip: str, selected_modules=None, stop_event=None, progr
             shared_data['open_ports'] = []
             send_progress(f"⚠️ Could not detect open ports: {e}", 10, "port_check", 0, total_modules)
 
+    # ✅ Reverse DNS hostname resolution
+    try:
+        from modules.reverse_DNS import reverse_dns_lookup
+        reverse_result = reverse_dns_lookup(target_ip)
+        if reverse_result.get("status") == "Pass":
+            hostname_line = reverse_result.get("details", "").split("→ Hostname:")[-1].strip()
+            shared_data["target_hostname"] = hostname_line
+        else:
+            shared_data["target_hostname"] = target_ip  # fallback to IP if no hostname
+    except Exception:
+        shared_data["target_hostname"] = target_ip
+
     # Run each selected module
     for idx, module_name in enumerate(selected_modules, start=1):
         if stop_event and stop_event.is_set():

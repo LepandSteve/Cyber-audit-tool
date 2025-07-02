@@ -243,6 +243,13 @@ class CyberAuditGUI(tk.Tk):
                     {"module": name, **data} for name, data in module_scores.items()
                 ]
 
+                # Store resolved hostname from audit results if available
+                resolved_hostname = results.get("target_hostname", None)
+                if resolved_hostname:
+                    self.shared_data["target_hostname"] = resolved_hostname
+                else:
+                    self.shared_data["target_hostname"] = target  # fallback
+
                 def update_results():
                     self.title("Cybersecurity Audit Tool - DGDI / DSSI")
                     self.result_text.insert("1.0", f"Final Score: {self.final_score:.2f} ({self.final_status})\n\n")
@@ -276,6 +283,8 @@ class CyberAuditGUI(tk.Tk):
         if not filename:
             return
 
+        hostname = self.shared_data.get("target_hostname", target)
+
         cleaned_report_data = []
         for item in self.final_report_data:
             cleaned_item = {
@@ -298,7 +307,7 @@ class CyberAuditGUI(tk.Tk):
                 "pdf": generate_pdf_report,
             }
             if fmt in exporters:
-                exporters[fmt](cleaned_report_data, target, self.hostname, lang, filename)
+                exporters[fmt](cleaned_report_data, target, hostname, lang, filename)
                 messagebox.showinfo("Export Success", f"Report exported successfully to:\n{filename}")
             else:
                 raise ValueError(f"Unsupported export format: {fmt}")
@@ -318,7 +327,7 @@ class CyberAuditGUI(tk.Tk):
 
     def run_auto_updater(self):
          run_auto_updater()
-        
+
     def toggle_dark_mode(self):
         dark = self.current_theme == "light"
         self.current_theme = "dark" if dark else "light"

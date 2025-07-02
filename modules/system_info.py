@@ -27,9 +27,9 @@ def is_local_ip(ip: str) -> bool:
         return False
 
 
-def get_system_info() -> str:
+def get_local_system_info() -> str:
     """
-    Gather basic system information.
+    Gather basic system information for the local machine.
     """
     try:
         info = [
@@ -49,10 +49,11 @@ def run_audit(
     banners: Optional[list] = None,
     is_private: Optional[bool] = None,
     open_ports: Optional[list] = None,
-    shared_data: Optional[dict] = None,  # 👈 Added to accept shared_data
+    shared_data: Optional[dict] = None,
 ) -> Dict:
     """
-    Run the System Info audit. Only runs if the target IP is the local machine.
+    Run the System Info audit.
+    Shows local system details if IP is local; otherwise, reports hostname of remote target.
     """
     if not ip:
         return {
@@ -62,23 +63,31 @@ def run_audit(
             "remediation": "📥 Pass the local machine's IP address to run_audit(ip=...).",
         }
 
-    if not is_local_ip(ip):
+    if is_local_ip(ip):
+        details = get_local_system_info()
         return {
             "score": 10.0,
-            "status": "Info",
-            "details": (
-                f"ℹ️ System Info audit skipped: {ip} is not recognized as a local IP.\n"
-                "✅ This module is designed to collect host-level data only when auditing the local machine."
-            ),
-            "remediation": "🔁 Use 127.0.0.1 or the machine’s real IP to get system info from the local host.",
+            "status": "Pass",
+            "details": details,
+            "remediation": "🩺 Ensure your OS and all software components are regularly updated with the latest security patches.",
         }
 
-    details = get_system_info()
+    # For remote IPs, show hostname from shared_data if available
+    hostname = ip
+    if shared_data and "target_hostname" in shared_data:
+        hostname = shared_data["target_hostname"]
+
+    details = (
+        f"ℹ️ System Info audit skipped: {ip} is not recognized as a local IP.\n"
+        f"📡 Target Hostname: {hostname}\n"
+        "✅ This module only collects host-level data on the local machine."
+    )
+
     return {
         "score": 10.0,
-        "status": "Pass",
+        "status": "Info",
         "details": details,
-        "remediation": "🩺 Ensure your OS and all software components are regularly updated with the latest security patches.",
+        "remediation": "🔁 Use 127.0.0.1 or your own IP to audit system-level information on this machine.",
     }
 
 
