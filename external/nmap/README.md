@@ -28,15 +28,3 @@
 ## Why not include Nmap in the repo?
 
 - Nmap is licensed under the [Nmap Public Source License](https://nmap.org/book/man-legal.html), which **does not allow redistribution of compiled binaries** without explicit permission.
-- By instructing users to download from the official source, you comply with licensing and legal requirements.
-
----
-
-## Automation (Optional)
-
-If you'd like to **automatically detect if Nmap is missing**, your Python code will alert the user and point them to this folder. Example:
-
-```python
-nmap_path = os.path.join("external", "nmap", "nmap.exe")
-if not os.path.exists(nmap_path):
- return "❌ Nmap not found. Please download Nmap and place it in 'external/nmap/'. See README in that folder."
