@@ -1,3 +1,5 @@
 This tool Helps check the Security Posture of your system.
-The most thing you have to take care of is check 2 files first the output file to download the App and then read the README of the external/nmap file because you will definitly need this.
+The thing you have to do first and formemost when downloading  the installer is to check 2 files first: 
+1- The output file to download the App  
+2- Read the README of the external/nmap file because you will definitely need this for Nmap.
 Good Luck and Good Auditing!
