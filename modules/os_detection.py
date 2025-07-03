@@ -1,18 +1,10 @@
-"""
-os_detection.py
-
-Attempts to infer the target operating system based on service banners and reverse DNS hostname.
-"""
-
+import subprocess
 from collections import Counter
 from typing import List, Tuple, Optional, Dict
-from modules.reverse_DNS import reverse_dns_lookup  # ✅ Import reverse DNS
-from utils.ip_utils import is_private_ip  # Ensure you have this to confirm IP type
+from modules.reverse_DNS import reverse_dns_lookup
+from utils.ip_utils import is_private_ip
 
 def detect_os_from_banners(banner_list: List[Tuple[int, str]]) -> Tuple[Optional[Tuple[str, int]], str]:
-    """
-    Analyze service banners to guess the most likely operating system.
-    """
     os_guesses = []
 
     for port, banner in banner_list:
@@ -42,6 +34,26 @@ def detect_os_from_banners(banner_list: List[Tuple[int, str]]) -> Tuple[Optional
     most_common = Counter(os_guesses).most_common(1)[0]
     return most_common, f"🖥️ Likely Operating System: {most_common[0]} (detected {most_common[1]} time(s))"
 
+def run_nmap_os_fingerprint(ip: str) -> Optional[str]:
+    try:
+        result = subprocess.run(
+            ["nmap", "-O", "-Pn", ip],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=45,
+            check=True
+        )
+        return result.stdout
+    except subprocess.TimeoutExpired:
+        return "⏰ OS detection with Nmap timed out."
+    except FileNotFoundError:
+        return "❌ Nmap not found. Install it and ensure it’s in your PATH."
+    except subprocess.CalledProcessError as e:
+        return e.stderr.strip() or e.stdout.strip()
+    except Exception as e:
+        return f"❌ Unexpected error: {e}"
+
 def run_audit(
     ip: Optional[str] = None,
     banners: Optional[List[Tuple[int, str]]] = None,
@@ -49,11 +61,10 @@ def run_audit(
     open_ports: Optional[List[int]] = None,
     shared_data: Optional[Dict] = None
 ) -> dict:
-    """
-    Audit entry point for OS detection based on service banners and optional reverse DNS enhancement.
-    """
     banner_list = banners or []
     extra_note = ""
+    active_result = ""
+    os_from_nmap = None
 
     if ip and not (is_private or (shared_data and shared_data.get("is_private")) or is_private_ip(ip)):
         try:
@@ -62,7 +73,6 @@ def run_audit(
                 hostname = dns_result["details"].split("→ Hostname:")[-1].strip()
                 extra_note = f"🌐 Reverse DNS Suggests: {hostname}"
 
-                # Try inferring OS from the hostname
                 hostname_lower = hostname.lower()
                 if "windows" in hostname_lower:
                     banner_list.append((0, "Windows Reverse DNS"))
@@ -75,60 +85,76 @@ def run_audit(
         except Exception as e:
             extra_note = f"⚠️ Reverse DNS check failed: {e}"
 
+    # 🔍 Try Nmap -O
+    if ip:
+        active_result = run_nmap_os_fingerprint(ip)
+        if shared_data is not None:
+            shared_data["os_nmap_output"] = active_result
+
+        if "OS details:" in active_result:
+            lines = active_result.splitlines()
+            os_lines = [line.strip() for line in lines if line.strip().startswith("OS details:")]
+            if os_lines:
+                os_from_nmap = os_lines[0].replace("OS details: ", "").strip()
+
     try:
-        most_common, details = detect_os_from_banners(banner_list)
+        most_common, banner_details = detect_os_from_banners(banner_list)
     except Exception as e:
         return {
             "score": 4.0,
             "status": "Warning",
             "details": f"❗ Exception during OS detection: {e}",
-            "remediation": (
-                "Check banner data format and audit environment.\n"
-                "Consider using active OS fingerprinting tools like `nmap -O`."
-            )
+            "remediation": "💡 Check banners and consider enabling active detection (Nmap -O)."
         }
 
-    if extra_note:
-        details += f"\n\n{extra_note}"
+    details = ""
 
-    if most_common is None or most_common[0] == "Unknown":
+    if os_from_nmap:
+        details += f"🧠 Active OS Detection (Nmap): {os_from_nmap}\n\n"
+    else:
+        details += banner_details + "\n\n"
+
+    if extra_note:
+        details += extra_note + "\n"
+
+    remediation = (
+        "🔍 Consider verifying OS using multiple techniques.\n"
+        "- Enable banner grabbing on all services\n"
+        "- Allow Nmap OS scan permissions (root/admin)\n"
+        "- Use reverse DNS + known fingerprint tools"
+    )
+
+    if os_from_nmap:
+        return {
+            "score": 10.0,
+            "status": "Pass",
+            "details": details.strip(),
+            "remediation": "✅ OS identified successfully with active fingerprinting."
+        }
+    elif most_common is None or most_common[0] == "Unknown":
         return {
             "score": 6.0,
             "status": "Info",
-            "details": details,
-            "remediation": (
-                "⚠️ Service banners appear generic or OS could not be identified.\n"
-                "💡 Use active fingerprinting tools like Nmap (-O) or check reverse DNS manually."
-            )
+            "details": details.strip(),
+            "remediation": "⚠️ Unable to determine OS confidently. Use Nmap (-O) or verify manually."
+        }
+    else:
+        score = 8.0 if most_common[1] < 2 else 10.0
+        status = "Info" if score < 10 else "Pass"
+        return {
+            "score": score,
+            "status": status,
+            "details": details.strip(),
+            "remediation": remediation
         }
 
-    if most_common[1] >= 2:
-        score = 10.0
-        status = "Pass"
-        remediation = "✅ OS consistently identified across multiple sources. No action needed."
-    else:
-        score = 8.0
-        status = "Info"
-        remediation = (
-            "ℹ️ OS inferred from limited information.\n"
-            "🔍 Consider verifying with SMB, SSH, RDP, or Nmap (-O)."
-        )
-
-    return {
-        "score": round(score, 2),
-        "status": status,
-        "details": details,
-        "remediation": remediation
-    }
-
 if __name__ == "__main__":
-    test_banners = [
+    banners = [
         (80, "Apache/2.4.41 (Ubuntu)"),
         (22, "OpenSSH_7.6p1 Ubuntu-4ubuntu0.3"),
-        (443, "nginx/1.18.0 (Ubuntu)")
     ]
-    result = run_audit(ip="8.8.8.8", banners=test_banners)
-    print(f"Score: {result['score']}")
-    print(f"Status: {result['status']}")
-    print("Details:\n" + result['details'])
-    print("Remediation:\n" + result['remediation'])
+    res = run_audit(ip="8.8.8.8", banners=banners)
+    print(f"Score: {res['score']}")
+    print(f"Status: {res['status']}")
+    print(f"Details:\n{res['details']}")
+    print(f"Remediation:\n{res['remediation']}")

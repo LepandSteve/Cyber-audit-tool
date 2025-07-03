@@ -1,29 +1,32 @@
-# modules/network_scan.py
-
 import subprocess
 import threading
+import os
 
-def run_nmap_scan(ip_address: str, cancel_event: threading.Event) -> str:
+def get_nmap_path() -> str:
     """
-    Run an nmap scan on the given IP address.
-
-    Args:
-        ip_address (str): Target IP to scan.
-        cancel_event (threading.Event): Event to signal cancellation.
+    Determine the path to the Nmap executable.
 
     Returns:
-        str: nmap output or error message.
+        str: Full path to nmap.exe or just "nmap" if using system PATH.
     """
+    local_path = os.path.join("external", "nmap", "nmap.exe")
+    return local_path if os.path.exists(local_path) else "nmap"
+
+def run_nmap_scan(ip_address: str, cancel_event: threading.Event) -> str:
     if cancel_event.is_set():
         return "⏹️ Nmap scan canceled."
 
     try:
         result = subprocess.run(
-            ["nmap", "-T4", "-F", "-n", "-Pn", ip_address],
+            [
+                "nmap", "-T4",
+                "-p", "21,22,23,25,53,80,110,139,143,443,445,3306,3389,5900,8080",
+                "-sS", "-sV", "--script", "vuln", "-n", "-Pn", ip_address
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            timeout=30,
+            timeout=90,  # Vulnerability scripts may take longer
             check=True
         )
         return result.stdout
@@ -59,7 +62,6 @@ def extract_open_ports(nmap_output: str) -> list[int]:
             if not line.strip():
                 break  # End of ports section
             parts = line.split()
-            # Expecting format: PORT STATE SERVICE ...
             if len(parts) >= 2 and '/' in parts[0] and parts[1].lower() == "open":
                 try:
                     port = int(parts[0].split('/')[0])
@@ -67,7 +69,6 @@ def extract_open_ports(nmap_output: str) -> list[int]:
                 except ValueError:
                     continue
     return open_ports
-
 
 def run_audit(ip=None, banners=None, open_ports=None, shared_data=None, cancel_event=None):
     """
@@ -106,6 +107,7 @@ def run_audit(ip=None, banners=None, open_ports=None, shared_data=None, cancel_e
         status = "Fail"
         remediation = (
             "🛠️ Ensure Nmap is installed and accessible from your system PATH.\n"
+            "📁 Or copy Nmap to 'external/nmap/' folder in this project.\n"
             "🌐 Check target availability.\n"
             "⏱️ Increase timeout if target is slow to respond."
         )
@@ -133,7 +135,6 @@ def run_audit(ip=None, banners=None, open_ports=None, shared_data=None, cancel_e
         "details": details,
         "remediation": remediation
     }
-
 
 if __name__ == "__main__":
     test_ip = "8.8.8.8"

@@ -1,3 +1,5 @@
 .env
 __pycache__/
 *.pyc
+external/nmap/*
+!external/nmap/README.md
