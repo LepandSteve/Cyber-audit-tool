@@ -5,7 +5,7 @@
 
 import socket
 import re
-from modules import (
+from modules.standard_audit import (
     banner_grabber,
     ip_geolocation,
     geoip_lookup,

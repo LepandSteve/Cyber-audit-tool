@@ -1,4 +1,4 @@
-from modules import (
+from modules.standard_audit import (
     antivirus_check,
     banner_grabber,
     brute_force_exposure,
