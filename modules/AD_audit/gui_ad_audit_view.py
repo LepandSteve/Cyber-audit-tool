@@ -1,5 +1,3 @@
-# modules/gui_ad_audit_view.py
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 from modules.AD_audit import runner as ad_runner
@@ -15,8 +13,8 @@ AD_MODULES = {
     "service_accounts": "Service Accounts",
 }
 
-class ADAuditView(ttk.Frame):
-    def __init__(self, parent, hostname=None):
+class ADAuditView(tk.Frame):
+    def __init__(self, parent, hostname=None, dark_mode=False):
         super().__init__(parent)
         self.hostname = hostname
         self.selected_modules = {}
@@ -24,55 +22,102 @@ class ADAuditView(ttk.Frame):
         self.progress_bar = None
         self.results_text = None
         self.final_score_label = None
+        self.dark_mode = dark_mode
 
+        # Theme Colors
+        self.bg = "#1e1e1e" if self.dark_mode else "#f0f0f0"
+        self.fg = "#e0e0e0" if self.dark_mode else "black"
+        self.txt_bg = "#121212" if self.dark_mode else "white"
+        self.txt_fg = self.fg
+
+        self.configure(bg=self.bg)
+        self.setup_styles()
         self.create_widgets()
 
+    def setup_styles(self):
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+
+        if self.dark_mode:
+            self.style.configure("Dark.TLabelframe", background=self.bg, foreground=self.fg)
+            self.style.configure("Dark.TLabelframe.Label", background=self.bg, foreground=self.fg)
+            self.style.configure("Dark.TScrollbar", background=self.txt_bg)
+            self.style.configure("Dark.Horizontal.TProgressbar", troughcolor=self.bg, background="#4caf50")
+        else:
+            self.style.configure("Light.TLabelframe", background=self.bg, foreground=self.fg)
+            self.style.configure("Light.TLabelframe.Label", background=self.bg, foreground=self.fg)
+            self.style.configure("Light.TScrollbar", background="white")
+            self.style.configure("Light.Horizontal.TProgressbar", troughcolor=self.bg, background="#4caf50")
+
     def create_widgets(self):
-        # AD Credential Inputs
-        creds_frame = ttk.LabelFrame(self, text="LDAP Credentials")
+        # LDAP Credentials Frame
+        creds_frame = ttk.LabelFrame(self, text="LDAP Credentials",
+                                     style="Dark.TLabelframe" if self.dark_mode else "Light.TLabelframe")
         creds_frame.pack(fill="x", padx=10, pady=10)
 
         self.server_var = tk.StringVar()
         self.user_var = tk.StringVar()
         self.pass_var = tk.StringVar()
 
-        ttk.Label(creds_frame, text="Server:").grid(row=0, column=0, sticky="w", padx=5, pady=2)
-        ttk.Entry(creds_frame, textvariable=self.server_var, width=40).grid(row=0, column=1, padx=5, pady=2)
+        def lbl(parent, text, row):
+            tk.Label(parent, text=text, bg=self.bg, fg=self.fg, font=("Segoe UI", 9)).grid(row=row, column=0, sticky="w", padx=5, pady=2)
 
-        ttk.Label(creds_frame, text="Username:").grid(row=1, column=0, sticky="w", padx=5, pady=2)
-        ttk.Entry(creds_frame, textvariable=self.user_var, width=40).grid(row=1, column=1, padx=5, pady=2)
+        def entry(parent, var, row, show=None):
+            tk.Entry(parent, textvariable=var, width=40, show=show, bg=self.txt_bg, fg=self.txt_fg,
+                     insertbackground=self.txt_fg).grid(row=row, column=1, padx=5, pady=2)
 
-        ttk.Label(creds_frame, text="Password:").grid(row=2, column=0, sticky="w", padx=5, pady=2)
-        ttk.Entry(creds_frame, textvariable=self.pass_var, show="*", width=40).grid(row=2, column=1, padx=5, pady=2)
+        lbl(creds_frame, "Server:", 0)
+        entry(creds_frame, self.server_var, 0)
+
+        lbl(creds_frame, "Username:", 1)
+        entry(creds_frame, self.user_var, 1)
+
+        lbl(creds_frame, "Password:", 2)
+        entry(creds_frame, self.pass_var, 2, show="*")
 
         # Module Selection
-        modules_frame = ttk.LabelFrame(self, text="Select AD Audit Modules")
+        modules_frame = ttk.LabelFrame(self, text="Select AD Audit Modules",
+                                       style="Dark.TLabelframe" if self.dark_mode else "Light.TLabelframe")
         modules_frame.pack(fill="x", padx=10, pady=10)
 
         for idx, (mod_key, mod_label) in enumerate(AD_MODULES.items()):
             var = tk.BooleanVar(value=True)
-            chk = ttk.Checkbutton(modules_frame, text=mod_label, variable=var)
+            chk = tk.Checkbutton(modules_frame, text=mod_label, variable=var,
+                                 bg=self.bg, fg=self.fg, selectcolor=self.txt_bg,
+                                 anchor="w", font=("Segoe UI", 9))
             chk.grid(row=idx // 2, column=idx % 2, sticky="w", padx=5, pady=2)
             self.selected_modules[mod_key] = var
 
         # Run Button
-        run_btn = ttk.Button(self, text="Run AD Audit", command=self.run_ad_audit)
+        run_btn = tk.Button(self, text="Run AD Audit", command=self.run_ad_audit, bg="#4caf50", fg="white",
+                            font=("Segoe UI", 10, "bold"))
         run_btn.pack(pady=10)
 
-        # Progress Bar and Label
-        self.progress_label = ttk.Label(self, text="Progress: Idle")
+        # Progress Label
+        self.progress_label = tk.Label(self, text="Progress: Idle", bg=self.bg, fg=self.fg, font=("Segoe UI", 9))
         self.progress_label.pack()
 
-        self.progress_bar = ttk.Progressbar(self, length=400, mode='determinate')
+        # Progress Bar
+        self.progress_bar = ttk.Progressbar(self, length=400, mode='determinate',
+                                            style="Dark.Horizontal.TProgressbar" if self.dark_mode else "Light.Horizontal.TProgressbar")
         self.progress_bar.pack(pady=5)
 
         # Final Score
-        self.final_score_label = ttk.Label(self, text="", font=("Segoe UI", 11, "bold"))
+        self.final_score_label = tk.Label(self, text="", font=("Segoe UI", 11, "bold"), bg=self.bg, fg=self.fg)
         self.final_score_label.pack(pady=5)
 
         # Results Text Box
-        self.results_text = tk.Text(self, height=20, wrap="word")
-        self.results_text.pack(fill="both", expand=True, padx=10, pady=10)
+        result_frame = tk.Frame(self, bg=self.bg)
+        result_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        self.results_text = tk.Text(result_frame, height=20, wrap="word",
+                                    bg=self.txt_bg, fg=self.txt_fg,
+                                    insertbackground=self.txt_fg)
+        scroll = ttk.Scrollbar(result_frame, command=self.results_text.yview)
+        self.results_text.configure(yscrollcommand=scroll.set)
+
+        self.results_text.pack(side=tk.LEFT, fill="both", expand=True)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
     def update_progress(self, info):
         message, percent, module_name, current, total = info

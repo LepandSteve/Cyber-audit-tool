@@ -14,8 +14,6 @@ from modules.standard_audit.report import (
     generate_pdf_report,
 )
 from modules.standard_audit.runner import run_full_audit
-from modules.standard_audit.version_checker import check_latest_version
-from modules.standard_audit.auto_updater import run_auto_updater
 
 MODULE_GROUPS = {
     "System & OS": ["system_info", "os_detection", "firewall_check", "antivirus_check"],
@@ -34,22 +32,55 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 class AuditView(tk.Frame):
-    def __init__(self, parent, hostname):
+    def __init__(self, parent, hostname, dark_mode=False):
         super().__init__(parent)
         self.hostname = hostname
-        self.current_theme = "light"
+        self.dark_mode_enabled = dark_mode
+        self.current_theme = "dark" if dark_mode else "light"
         self.audit_results = {}
         self.shared_data = {}
         self.final_report_data = []
         self.listbox_indices_headers = []
 
-        self.configure(bg="#f0f0f0")
+        self.bg = "#1e1e1e" if self.dark_mode_enabled else "#f0f0f0"
+        self.fg = "#e0e0e0" if self.dark_mode_enabled else "black"
+        self.txt_bg = "#121212" if self.dark_mode_enabled else "white"
+        self.txt_fg = self.fg
+
+        self.configure(bg=self.bg)
         self.setup_styles()
         self.create_widgets()
 
     def setup_styles(self):
         self.style = ttk.Style()
         self.style.theme_use("clam")
+
+        if self.dark_mode_enabled:
+            self.style.configure("Dark.TCombobox",
+                                 fieldbackground=self.txt_bg,
+                                 background=self.txt_bg,
+                                 foreground=self.txt_fg)
+            self.style.configure("Dark.TLabelframe",
+                                 background=self.bg,
+                                 foreground=self.fg)
+            self.style.configure("Dark.TLabelframe.Label",
+                                 background=self.bg,
+                                 foreground=self.fg)
+            self.style.configure("Dark.TScrollbar",
+                                 background=self.txt_bg)
+        else:
+            self.style.configure("Light.TCombobox",
+                                 fieldbackground="white",
+                                 background="white",
+                                 foreground="black")
+            self.style.configure("Light.TLabelframe",
+                                 background=self.bg,
+                                 foreground=self.fg)
+            self.style.configure("Light.TLabelframe.Label",
+                                 background=self.bg,
+                                 foreground=self.fg)
+            self.style.configure("Light.TScrollbar",
+                                 background="white")
 
     def create_widgets(self):
         self.load_logo()
@@ -63,33 +94,41 @@ class AuditView(tk.Frame):
             logo_path = resource_path("dgdi_logo.png")
             logo = Image.open(logo_path).resize((140, 70))
             self.logo_image = ImageTk.PhotoImage(logo)
-            tk.Label(self, image=self.logo_image, bg=self["bg"]).pack(pady=10)
+            tk.Label(self, image=self.logo_image, bg=self.bg).pack(pady=10)
         except Exception as e:
             print(f"[Warning] Logo not loaded: {e}")
 
     def build_input_frame(self):
-        self.input_frame = tk.Frame(self, bg=self["bg"])
+        self.input_frame = tk.Frame(self, bg=self.bg)
         self.input_frame.pack(pady=10, fill=tk.X)
 
-        def lbl(text): return tk.Label(self.input_frame, text=text, bg=self["bg"], font=("Segoe UI", 10))
+        def lbl(text): return tk.Label(self.input_frame, text=text, bg=self.bg, fg=self.fg, font=("Segoe UI", 10))
 
         lbl("Target IP / Hostname:").grid(row=0, column=0, padx=8, pady=5, sticky="w")
-        self.entry_target = tk.Entry(self.input_frame, width=30, font=("Segoe UI", 10))
+        self.entry_target = tk.Entry(self.input_frame, width=30, font=("Segoe UI", 10),
+                                     bg=self.txt_bg, fg=self.txt_fg, insertbackground=self.txt_fg)
         self.entry_target.grid(row=0, column=1, padx=5)
 
         lbl("Language:").grid(row=0, column=2, padx=8)
         self.lang_var = tk.StringVar(value="English")
-        ttk.Combobox(self.input_frame, textvariable=self.lang_var, values=["English", "French"], width=10).grid(row=0, column=3)
+        ttk.Combobox(self.input_frame, textvariable=self.lang_var,
+                     values=["English", "French"], width=10,
+                     style="Dark.TCombobox" if self.dark_mode_enabled else "Light.TCombobox").grid(row=0, column=3)
 
         lbl("Export Format:").grid(row=0, column=4, padx=8)
         self.export_format = tk.StringVar(value="pdf")
-        ttk.Combobox(self.input_frame, textvariable=self.export_format, values=["txt", "json", "html", "pdf"], width=10).grid(row=0, column=5)
+        ttk.Combobox(self.input_frame, textvariable=self.export_format,
+                     values=["txt", "json", "html", "pdf"], width=10,
+                     style="Dark.TCombobox" if self.dark_mode_enabled else "Light.TCombobox").grid(row=0, column=5)
 
     def build_module_frame(self):
-        self.module_frame = tk.LabelFrame(self, text="Select Modules to Run", bg=self["bg"], font=("Segoe UI", 10, "bold"))
+        style_name = "Dark.TLabelframe" if self.dark_mode_enabled else "Light.TLabelframe"
+        self.module_frame = ttk.LabelFrame(self, text="Select Modules to Run", style=style_name)
         self.module_frame.pack(padx=20, pady=10, fill=tk.BOTH)
+        self.module_frame.configure(style=style_name)
 
-        self.module_listbox = tk.Listbox(self.module_frame, selectmode=tk.MULTIPLE, width=50, height=16, font=("Segoe UI", 9))
+        self.module_listbox = tk.Listbox(self.module_frame, selectmode=tk.MULTIPLE, width=50, height=16,
+                                         font=("Segoe UI", 9), bg=self.txt_bg, fg=self.txt_fg, selectbackground="#666666")
         idx = 0
         for group, modules in MODULE_GROUPS.items():
             self.module_listbox.insert(tk.END, f"--- {group} ---")
@@ -102,12 +141,13 @@ class AuditView(tk.Frame):
 
         self.select_all_var = tk.IntVar(value=1)
         self.select_all_cb = tk.Checkbutton(self.module_frame, text="Select All Modules", variable=self.select_all_var,
-                                            command=self.toggle_select_all, bg=self["bg"])
+                                            command=self.toggle_select_all, bg=self.bg, fg=self.fg,
+                                            selectcolor=self.txt_bg)
         self.select_all_cb.pack(anchor="w", padx=10)
         self.toggle_select_all()
 
     def build_button_frame(self):
-        btn_frame = tk.Frame(self, bg=self["bg"])
+        btn_frame = tk.Frame(self, bg=self.bg)
         btn_frame.pack(pady=10)
 
         def add_button(text, cmd, bg, fg="white", width=14):
@@ -116,44 +156,12 @@ class AuditView(tk.Frame):
 
         self.btn_start = add_button("Start Audit", self.perform_audit, "#4caf50")
         self.btn_export = add_button("Export Report", self.export_report, "#2196f3")
-        self.btn_dark_mode = add_button("Toggle Dark Mode", self.toggle_dark_mode, "#555")
-        self.btn_check_version = add_button("Check Version", self.check_version, "#673ab7")
-        self.btn_update = add_button("Auto Update", self.run_auto_updater, "#ff9800")
-        self.btn_quit = add_button("Quit", self.quit_app, "#f44336")
 
-        for btn in [
-            self.btn_start,
-            self.btn_export,
-            self.btn_dark_mode,
-            self.btn_check_version,
-            self.btn_update,
-            self.btn_quit,
-        ]:
-            btn.pack(side=tk.LEFT, padx=8)
+        self.btn_start.pack(side=tk.LEFT, padx=8)
+        self.btn_export.pack(side=tk.LEFT, padx=8)
 
         self.progress = ttk.Progressbar(self, orient="horizontal", mode="determinate", length=800)
         self.progress.pack(pady=10)
-
-    def check_version(self):
-        current_version = "1.1.2"
-        version_info_url = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
-
-        try:
-            result = check_latest_version(current_version, version_info_url)
-            if result.get("update_available"):
-                latest_version = result.get("latest_version", "unknown")
-                msg = f"New version {latest_version} is available!\n\nDownload: {result.get('download_url', '')}"
-                messagebox.showinfo("Update Available", msg)
-            else:
-                messagebox.showinfo("Version Check", f"You are running the latest version ({current_version}).")
-        except Exception as e:
-            messagebox.showerror("Version Check Error", f"Failed to check version:\n{e}")
-
-    def run_auto_updater(self):
-        try:
-            run_auto_updater()
-        except Exception as e:
-            messagebox.showerror("Update Error", f"Auto update failed:\n{e}")
 
     def toggle_select_all(self):
         if self.select_all_var.get():
@@ -171,12 +179,12 @@ class AuditView(tk.Frame):
         ]
 
     def disable_buttons(self):
-        for widget in [self.btn_start, self.btn_export, self.btn_dark_mode, self.btn_quit,
+        for widget in [self.btn_start, self.btn_export,
                        self.module_listbox, self.select_all_cb, self.entry_target]:
             widget.config(state=tk.DISABLED)
 
     def enable_buttons(self):
-        for widget in [self.btn_start, self.btn_export, self.btn_dark_mode, self.btn_quit,
+        for widget in [self.btn_start, self.btn_export,
                        self.module_listbox, self.select_all_cb, self.entry_target]:
             widget.config(state=tk.NORMAL)
 
@@ -206,7 +214,6 @@ class AuditView(tk.Frame):
         self.final_status = "Unknown"
 
         self.disable_buttons()
-
         stop_event = threading.Event()
 
         def update_progress(info):
@@ -295,31 +302,15 @@ class AuditView(tk.Frame):
         except Exception as e:
             messagebox.showerror("Export Error", f"Failed to export report:\n{e}")
 
-    def toggle_dark_mode(self):
-        dark = self.current_theme == "light"
-        self.current_theme = "dark" if dark else "light"
-        bg = "#1e1e1e" if dark else "#f0f0f0"
-        fg = "#e0e0e0" if dark else "black"
-        txt_bg = "#121212" if dark else "white"
-        txt_fg = fg
-
-        self.configure(bg=bg)
-        self.input_frame.configure(bg=bg)
-        self.module_frame.configure(bg=bg)
-        self.module_listbox.configure(bg=txt_bg, fg=txt_fg)
-        self.result_text.configure(bg=txt_bg, fg=txt_fg, insertbackground=txt_fg)
-        self.select_all_cb.configure(bg=bg, fg=fg, selectcolor="#333333" if dark else "white")
-    
     def build_result_display(self):
-        result_frame = tk.Frame(self)
+        result_frame = tk.Frame(self, bg=self.bg)
         result_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
 
-        self.result_text = tk.Text(result_frame, wrap=tk.WORD, font=("Consolas", 10), bg="white", fg="black", undo=True)
+        self.result_text = tk.Text(result_frame, wrap=tk.WORD, font=("Consolas", 10),
+                                   bg=self.txt_bg, fg=self.txt_fg,
+                                   insertbackground=self.txt_fg, undo=True)
         scroll = ttk.Scrollbar(result_frame, command=self.result_text.yview)
         self.result_text.configure(yscrollcommand=scroll.set)
 
         self.result_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
-
-    def quit_app(self):
-        self.master.quit()
