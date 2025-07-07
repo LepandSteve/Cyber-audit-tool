@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "download_url": "https://github.com/LepandSteve/Cyber-audit-tool/releases/download/v2.0.0/cyberAuditInstaller.exe",
-  "message": "New version 2.0.0 is available. This version adds menu on the side  and also adds a new audit section tool the auditting Active directory. "
+  "message": "New version 2.1.0 is available. This version reworks the menu and UI. "
 }
