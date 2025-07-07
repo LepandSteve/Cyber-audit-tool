@@ -8,6 +8,9 @@ from PIL import Image, ImageTk
 from modules.gui_audit_view import AuditView
 from modules.AD_audit.gui_ad_audit_view import ADAuditView
 
+# Define application version
+APP_VERSION = "v2.1.0"
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -18,7 +21,7 @@ def resource_path(relative_path):
 class MainApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Cybersecurity Audit Tool - DGDI / DSSI")
+        self.title(f"Cybersecurity Audit Tool - DGDI / DSSI ({APP_VERSION})")
         self.geometry("1200x800")
         self.resizable(True, True)
         self.hostname = socket.gethostname()
@@ -138,7 +141,7 @@ class MainApp(tk.Tk):
                 self.show_home_view()
 
     def check_for_updates(self):
-        messagebox.showinfo("Check for Updates", "✅ You are using the latest version (v2.0.0).")
+        messagebox.showinfo("Check for Updates", f"✅ You are using the latest version ({APP_VERSION}).")
 
     def download_update(self):
         messagebox.showinfo("Download Update", "📥 Update functionality not implemented yet.")
@@ -164,7 +167,6 @@ class MainApp(tk.Tk):
         except Exception as e:
             print(f"[Background Error] {e}")
 
-        # Welcome text (on top of background)
         fg_color = "#2c3e50" if not self.dark_mode_enabled else "white"
 
         welcome = tk.Label(
@@ -185,7 +187,7 @@ class MainApp(tk.Tk):
         )
         prompt.place(relx=0.5, rely=0.26, anchor="center")
 
-        # Buttons placed directly without a box
+        # Buttons
         btn_style = {
             "font": ("Segoe UI", 12, "bold"),
             "width": 20,
@@ -204,6 +206,16 @@ class MainApp(tk.Tk):
 
         ad_btn = tk.Button(home_frame, text="🛡️ AD Audit", command=self.show_ad_audit_view, **btn_style)
         ad_btn.place(relx=0.5, rely=0.43, anchor="center")
+
+        # Version display
+        version_label = tk.Label(
+            home_frame,
+            text=f"Version: {APP_VERSION}",
+            font=("Segoe UI", 9),
+            bg=bg_color,
+            fg=fg_color
+        )
+        version_label.place(relx=0.99, rely=0.98, anchor="se")
 
     def show_audit_view(self):
         self.clear_main_area()
