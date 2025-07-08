@@ -1,4 +1,4 @@
 python-dotenv
 psutil
 python-nmap   
-ladp3
+ldap3
