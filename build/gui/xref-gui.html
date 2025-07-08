@@ -160,6 +160,8 @@ imports:
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#modules.AD_audit.gui_ad_audit_view">modules.AD_audit.gui_ad_audit_view</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
+ &#8226;   <a href="#modules.standard_audit">modules.standard_audit</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
@@ -17905,6 +17907,7 @@ imported by:
 imports:
     <a href="#modules">modules</a>
  &#8226;   <a href="#modules.standard_audit.antivirus_check">modules.standard_audit.antivirus_check</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.banner_grabber">modules.standard_audit.banner_grabber</a>
  &#8226;   <a href="#modules.standard_audit.brute_force_exposure">modules.standard_audit.brute_force_exposure</a>
  &#8226;   <a href="#modules.standard_audit.credential_check">modules.standard_audit.credential_check</a>
@@ -17929,7 +17932,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#modules.standard_audit.antivirus_check">modules.standard_audit.antivirus_check</a>
+    <a href="#gui.py">gui.py</a>
+ &#8226;   <a href="#modules.standard_audit.antivirus_check">modules.standard_audit.antivirus_check</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.banner_grabber">modules.standard_audit.banner_grabber</a>
  &#8226;   <a href="#modules.standard_audit.brute_force_exposure">modules.standard_audit.brute_force_exposure</a>
  &#8226;   <a href="#modules.standard_audit.credential_check">modules.standard_audit.credential_check</a>
@@ -17951,6 +17956,7 @@ imported by:
  &#8226;   <a href="#modules.standard_audit.service_security">modules.standard_audit.service_security</a>
  &#8226;   <a href="#modules.standard_audit.system_info">modules.standard_audit.system_info</a>
  &#8226;   <a href="#modules.standard_audit.tls_inspector">modules.standard_audit.tls_inspector</a>
+ &#8226;   <a href="#modules.standard_audit.version_checker">modules.standard_audit.version_checker</a>
  &#8226;   <a href="#modules.standard_audit.vulnerability_scanner">modules.standard_audit.vulnerability_scanner</a>
  &#8226;   <a href="#modules.standard_audit.weak_protocols">modules.standard_audit.weak_protocols</a>
  &#8226;   <a href="#modules.standard_audit.whois_lookup">modules.standard_audit.whois_lookup</a>
@@ -17974,6 +17980,32 @@ imports:
 imported by:
     <a href="#modules.standard_audit">modules.standard_audit</a>
  &#8226;   <a href="#modules.standard_audit.runner">modules.standard_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.standard_audit.auto_updater"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/standard_audit/auto_updater.py" type="text/plain"><tt>modules.standard_audit.auto_updater</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#modules.standard_audit">modules.standard_audit</a>
+ &#8226;   <a href="#modules.standard_audit.version_checker">modules.standard_audit.version_checker</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pathlib">pathlib</a>
+ &#8226;   <a href="#requests">requests</a>
+ &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#tempfile">tempfile</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+ &#8226;   <a href="#tkinter.messagebox">tkinter.messagebox</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui.py">gui.py</a>
+ &#8226;   <a href="#modules.standard_audit">modules.standard_audit</a>
 
   </div>
 
@@ -18416,6 +18448,23 @@ imports:
 imported by:
     <a href="#modules.standard_audit">modules.standard_audit</a>
  &#8226;   <a href="#modules.standard_audit.runner">modules.standard_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.standard_audit.version_checker"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/standard_audit/version_checker.py" type="text/plain"><tt>modules.standard_audit.version_checker</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#modules.standard_audit">modules.standard_audit</a>
+ &#8226;   <a href="#requests">requests</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
 
   </div>
 
@@ -26322,6 +26371,7 @@ imported by:
  &#8226;   <a href="#lzma">lzma</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.network_scan">modules.standard_audit.network_scan</a>
  &#8226;   <a href="#modules.standard_audit.report">modules.standard_audit.report</a>
  &#8226;   <a href="#modules.standard_audit.report_utils">modules.standard_audit.report_utils</a>
@@ -26919,6 +26969,7 @@ imported by:
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources.abc">importlib.resources.abc</a>
  &#8226;   <a href="#importlib.resources.readers">importlib.resources.readers</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#numpy">numpy</a>
  &#8226;   <a href="#numpy.f2py._backends._meson">numpy.f2py._backends._meson</a>
  &#8226;   <a href="#numpy.f2py.crackfortran">numpy.f2py.crackfortran</a>
@@ -28548,10 +28599,12 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#modules.standard_audit.cve_lookup">modules.standard_audit.cve_lookup</a>
+    <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
+ &#8226;   <a href="#modules.standard_audit.cve_lookup">modules.standard_audit.cve_lookup</a>
  &#8226;   <a href="#modules.standard_audit.geoip_lookup">modules.standard_audit.geoip_lookup</a>
  &#8226;   <a href="#modules.standard_audit.http_headers_check">modules.standard_audit.http_headers_check</a>
  &#8226;   <a href="#modules.standard_audit.ip_geolocation">modules.standard_audit.ip_geolocation</a>
+ &#8226;   <a href="#modules.standard_audit.version_checker">modules.standard_audit.version_checker</a>
  &#8226;   <a href="#requests">requests</a>
  &#8226;   <a href="#requests.__version__">requests.__version__</a>
  &#8226;   <a href="#requests._internal_utils">requests._internal_utils</a>
@@ -34014,6 +34067,7 @@ imported by:
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#modules.standard_audit.antivirus_check">modules.standard_audit.antivirus_check</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.firewall_check">modules.standard_audit.firewall_check</a>
  &#8226;   <a href="#modules.standard_audit.network_scan">modules.standard_audit.network_scan</a>
  &#8226;   <a href="#modules.standard_audit.os_detection">modules.standard_audit.os_detection</a>
@@ -34155,6 +34209,7 @@ imported by:
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.vulnerability_scanner">modules.standard_audit.vulnerability_scanner</a>
  &#8226;   <a href="#multiprocessing">multiprocessing</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
@@ -34447,6 +34502,7 @@ imported by:
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#fpdf.fpdf">fpdf.fpdf</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.heap">multiprocessing.heap</a>
  &#8226;   <a href="#multiprocessing.synchronize">multiprocessing.synchronize</a>
@@ -34707,6 +34763,7 @@ imported by:
     <a href="#gui.py">gui.py</a>
  &#8226;   <a href="#modules.AD_audit.gui_ad_audit_view">modules.AD_audit.gui_ad_audit_view</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#tkinter.commondialog">tkinter.commondialog</a>
  &#8226;   <a href="#tkinter.constants">tkinter.constants</a>
  &#8226;   <a href="#tkinter.dialog">tkinter.dialog</a>
@@ -34805,6 +34862,7 @@ imported by:
     <a href="#gui.py">gui.py</a>
  &#8226;   <a href="#modules.AD_audit.gui_ad_audit_view">modules.AD_audit.gui_ad_audit_view</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
+ &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#tkinter.simpledialog">tkinter.simpledialog</a>
 
   </div>
