@@ -10,7 +10,7 @@ from modules.AD_audit.gui_ad_audit_view import ADAuditView
 from modules.standard_audit import auto_updater 
 
 # Define application version
-APP_VERSION = "v2.1.0"
+APP_VERSION = "v2.1.1"
 
 def resource_path(relative_path):
     try:
@@ -173,7 +173,7 @@ class MainApp(tk.Tk):
 
         # Run after slight delay so UI renders fully first
         self.after(100, perform_update)
-        
+
     def clear_main_area(self):
         for widget in self.main_area.winfo_children():
             widget.destroy()
