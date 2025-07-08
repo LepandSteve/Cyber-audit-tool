@@ -149,7 +149,7 @@ class MainApp(tk.Tk):
 
         # Progress label
         progress_label = tk.Label(
-            self.main_area, text="📥 Downloading update...", font=("Segoe UI", 12),
+            self.main_area, text="📥 Checking for updates...", font=("Segoe UI", 12),
             bg=self.main_area["bg"]
         )
         progress_label.pack(pady=30)
@@ -164,17 +164,16 @@ class MainApp(tk.Tk):
         self.update_idletasks()
 
         def perform_update():
-            success = auto_updater.download_and_execute_latest_release()
-            progress_bar.stop()
-            if success:
-                messagebox.showinfo("Update Ready", "✅ Update downloaded! The installer will now run.")
-                self.quit()
-            else:
-                messagebox.showwarning("Update Failed", "⚠️ Could not download update. Please try again later.")
+            try:
+                auto_updater.run_auto_updater()
+            except Exception as e:
+                messagebox.showerror("Update Error", f"❌ Failed to update: {e}")
+            finally:
+                progress_bar.stop()
 
-        # Run the updater after slight delay to allow UI rendering
+        # Run after slight delay so UI renders fully first
         self.after(100, perform_update)
-
+        
     def clear_main_area(self):
         for widget in self.main_area.winfo_children():
             widget.destroy()
