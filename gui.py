@@ -145,22 +145,35 @@ class MainApp(tk.Tk):
         messagebox.showinfo("Check for Updates", f"✅ You are using the latest version ({APP_VERSION}).")
 
     def download_update(self):
-        try:
-            self.clear_main_area()
-            downloading_label = tk.Label(self.main_area, text="📥 Downloading latest update...", font=("Segoe UI", 12), bg=self.main_area["bg"])
-            downloading_label.pack(pady=50)
+        self.clear_main_area()
 
-            self.update_idletasks()
+        # Progress label
+        progress_label = tk.Label(
+            self.main_area, text="📥 Downloading update...", font=("Segoe UI", 12),
+            bg=self.main_area["bg"]
+        )
+        progress_label.pack(pady=30)
+
+        # Progress bar
+        progress_bar = tk.ttk.Progressbar(
+            self.main_area, mode='indeterminate', length=300
+        )
+        progress_bar.pack(pady=10)
+        progress_bar.start(10)
+
+        self.update_idletasks()
+
+        def perform_update():
             success = auto_updater.download_and_execute_latest_release()
-
+            progress_bar.stop()
             if success:
                 messagebox.showinfo("Update Ready", "✅ Update downloaded! The installer will now run.")
                 self.quit()
             else:
-                messagebox.showwarning("Update Failed", "⚠️ Could not download update. Please check your internet connection or try again later.")
+                messagebox.showwarning("Update Failed", "⚠️ Could not download update. Please try again later.")
 
-        except Exception as e:
-            messagebox.showerror("Update Error", f"❌ Failed to update: {e}")
+        # Run the updater after slight delay to allow UI rendering
+        self.after(100, perform_update)
 
     def clear_main_area(self):
         for widget in self.main_area.winfo_children():

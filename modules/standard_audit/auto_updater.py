@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import messagebox
 from modules.standard_audit.version_checker import check_latest_version
 
-APP_VERSION = "1.1.1"  # Update this on each release
+APP_VERSION = "2.1.0"  # Update this on each release
 VERSION_URL = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
 def run_auto_updater():
@@ -61,3 +61,12 @@ subprocess.run(["{installer_path}"], shell=True)
                 messagebox.showerror("Update Error", f"Failed to download or run installer:\n{e}")
     else:
         messagebox.showinfo("No Update", update_info["message"])
+
+def download_and_execute_latest_release():
+    """Wrapper for GUI to trigger update."""
+    try:
+        run_auto_updater()
+        return True
+    except Exception as e:
+        print(f"[Updater Error] {e}")
+        return False
