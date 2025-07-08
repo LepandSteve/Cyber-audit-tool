@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from modules.AD_audit import runner as ad_runner
-
+from modules.standard_audit import report
 AD_MODULES = {
     "ad_enum": "AD Enumeration",
     "kerberos_check": "Kerberos Check",
@@ -23,6 +23,8 @@ class ADAuditView(tk.Frame):
         self.results_text = None
         self.final_score_label = None
         self.dark_mode = dark_mode
+        self.ad_audit_results = None
+        self.language = "English"
 
         # Theme Colors
         self.bg = "#1e1e1e" if self.dark_mode else "#f0f0f0"
@@ -119,6 +121,14 @@ class ADAuditView(tk.Frame):
         self.results_text.pack(side=tk.LEFT, fill="both", expand=True)
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
+        # Export Button
+        export_btn = tk.Button(
+            self, text="📁 Export Report", command=self.export_report,
+            bg="#f39c12", fg="white", font=("Segoe UI", 10, "bold")
+        )
+        export_btn.pack(pady=(5, 10))
+
+
     def update_progress(self, info):
         message, percent, module_name, current, total = info
         self.progress_label.config(text=message)
@@ -150,6 +160,7 @@ class ADAuditView(tk.Frame):
                 selected_modules=selected_keys,
                 progress_callback=self.update_progress
             )
+            self.ad_audit_results = results  # Store results for potential export
 
             self.final_score_label.config(
                 text=f"✅ Final Score: {results['final_score']} | Status: {results['overall_status']}"
@@ -165,3 +176,20 @@ class ADAuditView(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Audit Error", f"An error occurred:\n{e}")
+
+    def export_report(self):
+        if not self.ad_audit_results:
+            messagebox.showwarning("No Results", "Please run the audit before exporting.")
+            return
+
+        try:
+            report.generate_report(
+                results=self.ad_audit_results,
+                hostname=self.hostname or "localhost",
+                report_type="AD Audit",
+                language=self.language  # default: English
+            )
+            messagebox.showinfo("Export Complete", "✅ Report successfully exported.")
+        except Exception as e:
+            messagebox.showerror("Export Error", f"❌ Failed to export report:\n{e}")
+
