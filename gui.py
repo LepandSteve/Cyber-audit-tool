@@ -10,7 +10,7 @@ from modules.AD_audit.gui_ad_audit_view import ADAuditView
 from modules.standard_audit import auto_updater 
 
 # Define application version
-APP_VERSION = "v2.1.1"
+APP_VERSION = "v2.1.2"
 
 def resource_path(relative_path):
     try:

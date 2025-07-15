@@ -5,8 +5,21 @@ from typing import Optional, Callable, Dict
 from ldap3 import Server, Connection, ALL, NTLM
 
 from modules.AD_audit import (
-    ad_enum, kerberos_check, group_policy_check, password_policy,
-    privileged_users, account_lockout, inactive_accounts, service_accounts
+    ad_enum,
+    kerberos_check,
+    group_policy_check,
+    password_policy,
+    privileged_users,
+    account_lockout,
+    inactive_accounts,
+    service_accounts,
+    admin_group_check,
+    delegation_check,
+    password_expiry,
+    spn_exposure,
+    ou_delegation,
+    domain_trust,
+    gpo_link_check
 )
 
 MODULES_MAP = {
@@ -18,7 +31,15 @@ MODULES_MAP = {
     "account_lockout": account_lockout,
     "inactive_accounts": inactive_accounts,
     "service_accounts": service_accounts,
+    "admin_group_check": admin_group_check,
+    "delegation_check": delegation_check,
+    "password_expiry": password_expiry,
+    "spn_exposure": spn_exposure,
+    "ou_delegation": ou_delegation,
+    "domain_trust": domain_trust,
+    "gpo_link_check": gpo_link_check
 }
+
 
 def connect_to_ldap(server_address: str, username: str, password: str) -> Optional[Connection]:
     try:

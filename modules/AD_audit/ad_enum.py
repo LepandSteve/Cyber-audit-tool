@@ -1,6 +1,6 @@
 from ldap3 import Server, Connection, ALL, NTLM, SUBTREE
 from datetime import datetime, timedelta
-from typing import Optional, Dict
+from typing import  Dict
 
 def run_audit(ip: str = None, username: str = '', password: str = '', domain: str = '', **kwargs) -> Dict:
     try:

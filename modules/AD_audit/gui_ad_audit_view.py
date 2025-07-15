@@ -11,6 +11,13 @@ AD_MODULES = {
     "account_lockout": "Account Lockout Policy",
     "inactive_accounts": "Inactive Accounts",
     "service_accounts": "Service Accounts",
+    "admin_group_check": "Admin Group Membership Check",
+    "delegation_check": "Delegation Rights Check",
+    "password_expiry": "Password Expiry Analysis",
+    "spn_exposure": "SPN Exposure Check",
+    "ou_delegation": "OU Delegation Rights Check",
+    "domain_trust": "Domain Trusts",
+    "gpo_link_check": "GPO Link Validation",
 }
 
 class ADAuditView(tk.Frame):

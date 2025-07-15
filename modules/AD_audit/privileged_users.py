@@ -1,8 +1,7 @@
 # modules.AD_audit.privileged_users.py
 
-from ldap3 import Server, Connection, ALL, NTLM
+from ldap3 import  Connection
 from typing import Dict, Optional
-import socket
 
 PRIVILEGED_GROUPS = [
     "Domain Admins",

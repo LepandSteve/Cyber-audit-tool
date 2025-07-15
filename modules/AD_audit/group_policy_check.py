@@ -1,6 +1,6 @@
 # modules/AD_audit/group_policy_check.py
 
-from ldap3 import Server, Connection, ALL
+from ldap3 import Connection
 from typing import Dict
 
 def run_audit(shared_data=None) -> Dict:

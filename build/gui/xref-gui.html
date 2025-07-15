@@ -14631,13 +14631,20 @@ imported by:
  &#8226;   <a href="#ldap3.version">ldap3.version</a>
  &#8226;   <a href="#modules.AD_audit.account_lockout">modules.AD_audit.account_lockout</a>
  &#8226;   <a href="#modules.AD_audit.ad_enum">modules.AD_audit.ad_enum</a>
+ &#8226;   <a href="#modules.AD_audit.admin_group_check">modules.AD_audit.admin_group_check</a>
+ &#8226;   <a href="#modules.AD_audit.delegation_check">modules.AD_audit.delegation_check</a>
+ &#8226;   <a href="#modules.AD_audit.domain_trust">modules.AD_audit.domain_trust</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
  &#8226;   <a href="#modules.AD_audit.group_policy_check">modules.AD_audit.group_policy_check</a>
  &#8226;   <a href="#modules.AD_audit.inactive_accounts">modules.AD_audit.inactive_accounts</a>
  &#8226;   <a href="#modules.AD_audit.kerberos_check">modules.AD_audit.kerberos_check</a>
+ &#8226;   <a href="#modules.AD_audit.ou_delegation">modules.AD_audit.ou_delegation</a>
+ &#8226;   <a href="#modules.AD_audit.password_expiry">modules.AD_audit.password_expiry</a>
  &#8226;   <a href="#modules.AD_audit.password_policy">modules.AD_audit.password_policy</a>
  &#8226;   <a href="#modules.AD_audit.privileged_users">modules.AD_audit.privileged_users</a>
  &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
  &#8226;   <a href="#modules.AD_audit.service_accounts">modules.AD_audit.service_accounts</a>
+ &#8226;   <a href="#modules.AD_audit.spn_exposure">modules.AD_audit.spn_exposure</a>
 
   </div>
 
@@ -14954,6 +14961,7 @@ imported by:
  &#8226;   <a href="#ldap3.utils.conv">ldap3.utils.conv</a>
  &#8226;   <a href="#ldap3.utils.dn">ldap3.utils.dn</a>
  &#8226;   <a href="#ldap3.utils.hashed">ldap3.utils.hashed</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
 
   </div>
 
@@ -16154,6 +16162,7 @@ imported by:
     <a href="#ldap3.extend.microsoft.dirSync">ldap3.extend.microsoft.dirSync</a>
  &#8226;   <a href="#ldap3.extend.microsoft.persistentSearch">ldap3.extend.microsoft.persistentSearch</a>
  &#8226;   <a href="#ldap3.strategy.base">ldap3.strategy.base</a>
+ &#8226;   <a href="#modules.AD_audit.ou_delegation">modules.AD_audit.ou_delegation</a>
 
   </div>
 
@@ -17639,27 +17648,41 @@ imports:
     <a href="#modules">modules</a>
  &#8226;   <a href="#modules.AD_audit.account_lockout">modules.AD_audit.account_lockout</a>
  &#8226;   <a href="#modules.AD_audit.ad_enum">modules.AD_audit.ad_enum</a>
+ &#8226;   <a href="#modules.AD_audit.admin_group_check">modules.AD_audit.admin_group_check</a>
+ &#8226;   <a href="#modules.AD_audit.delegation_check">modules.AD_audit.delegation_check</a>
+ &#8226;   <a href="#modules.AD_audit.domain_trust">modules.AD_audit.domain_trust</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
  &#8226;   <a href="#modules.AD_audit.group_policy_check">modules.AD_audit.group_policy_check</a>
  &#8226;   <a href="#modules.AD_audit.inactive_accounts">modules.AD_audit.inactive_accounts</a>
  &#8226;   <a href="#modules.AD_audit.kerberos_check">modules.AD_audit.kerberos_check</a>
+ &#8226;   <a href="#modules.AD_audit.ou_delegation">modules.AD_audit.ou_delegation</a>
+ &#8226;   <a href="#modules.AD_audit.password_expiry">modules.AD_audit.password_expiry</a>
  &#8226;   <a href="#modules.AD_audit.password_policy">modules.AD_audit.password_policy</a>
  &#8226;   <a href="#modules.AD_audit.privileged_users">modules.AD_audit.privileged_users</a>
  &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
  &#8226;   <a href="#modules.AD_audit.service_accounts">modules.AD_audit.service_accounts</a>
+ &#8226;   <a href="#modules.AD_audit.spn_exposure">modules.AD_audit.spn_exposure</a>
 
   </div>
   <div class="import">
 imported by:
     <a href="#modules.AD_audit.account_lockout">modules.AD_audit.account_lockout</a>
  &#8226;   <a href="#modules.AD_audit.ad_enum">modules.AD_audit.ad_enum</a>
+ &#8226;   <a href="#modules.AD_audit.admin_group_check">modules.AD_audit.admin_group_check</a>
+ &#8226;   <a href="#modules.AD_audit.delegation_check">modules.AD_audit.delegation_check</a>
+ &#8226;   <a href="#modules.AD_audit.domain_trust">modules.AD_audit.domain_trust</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
  &#8226;   <a href="#modules.AD_audit.group_policy_check">modules.AD_audit.group_policy_check</a>
  &#8226;   <a href="#modules.AD_audit.gui_ad_audit_view">modules.AD_audit.gui_ad_audit_view</a>
  &#8226;   <a href="#modules.AD_audit.inactive_accounts">modules.AD_audit.inactive_accounts</a>
  &#8226;   <a href="#modules.AD_audit.kerberos_check">modules.AD_audit.kerberos_check</a>
+ &#8226;   <a href="#modules.AD_audit.ou_delegation">modules.AD_audit.ou_delegation</a>
+ &#8226;   <a href="#modules.AD_audit.password_expiry">modules.AD_audit.password_expiry</a>
  &#8226;   <a href="#modules.AD_audit.password_policy">modules.AD_audit.password_policy</a>
  &#8226;   <a href="#modules.AD_audit.privileged_users">modules.AD_audit.privileged_users</a>
  &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
  &#8226;   <a href="#modules.AD_audit.service_accounts">modules.AD_audit.service_accounts</a>
+ &#8226;   <a href="#modules.AD_audit.spn_exposure">modules.AD_audit.spn_exposure</a>
 
   </div>
 
@@ -17694,6 +17717,83 @@ imports:
  &#8226;   <a href="#ldap3">ldap3</a>
  &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
  &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.admin_group_check"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/admin_group_check.py" type="text/plain"><tt>modules.AD_audit.admin_group_check</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#os">os</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.delegation_check"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/delegation_check.py" type="text/plain"><tt>modules.AD_audit.delegation_check</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#os">os</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.domain_trust"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/domain_trust.py" type="text/plain"><tt>modules.AD_audit.domain_trust</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#traceback">traceback</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.gpo_link_check"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/gpo_link_check.py" type="text/plain"><tt>modules.AD_audit.gpo_link_check</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#ldap3.core.exceptions">ldap3.core.exceptions</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#socket">socket</a>
 
   </div>
   <div class="import">
@@ -17786,6 +17886,44 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="modules.AD_audit.ou_delegation"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/ou_delegation.py" type="text/plain"><tt>modules.AD_audit.ou_delegation</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#ldap3.protocol.microsoft">ldap3.protocol.microsoft</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.password_expiry"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/password_expiry.py" type="text/plain"><tt>modules.AD_audit.password_expiry</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#traceback">traceback</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="modules.AD_audit.password_policy"></a>
   <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/password_policy.py" type="text/plain"><tt>modules.AD_audit.password_policy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -17811,7 +17949,6 @@ imported by:
 imports:
     <a href="#ldap3">ldap3</a>
  &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
- &#8226;   <a href="#socket">socket</a>
  &#8226;   <a href="#typing">typing</a>
 
   </div>
@@ -17834,12 +17971,19 @@ imports:
  &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
  &#8226;   <a href="#modules.AD_audit.account_lockout">modules.AD_audit.account_lockout</a>
  &#8226;   <a href="#modules.AD_audit.ad_enum">modules.AD_audit.ad_enum</a>
+ &#8226;   <a href="#modules.AD_audit.admin_group_check">modules.AD_audit.admin_group_check</a>
+ &#8226;   <a href="#modules.AD_audit.delegation_check">modules.AD_audit.delegation_check</a>
+ &#8226;   <a href="#modules.AD_audit.domain_trust">modules.AD_audit.domain_trust</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
  &#8226;   <a href="#modules.AD_audit.group_policy_check">modules.AD_audit.group_policy_check</a>
  &#8226;   <a href="#modules.AD_audit.inactive_accounts">modules.AD_audit.inactive_accounts</a>
  &#8226;   <a href="#modules.AD_audit.kerberos_check">modules.AD_audit.kerberos_check</a>
+ &#8226;   <a href="#modules.AD_audit.ou_delegation">modules.AD_audit.ou_delegation</a>
+ &#8226;   <a href="#modules.AD_audit.password_expiry">modules.AD_audit.password_expiry</a>
  &#8226;   <a href="#modules.AD_audit.password_policy">modules.AD_audit.password_policy</a>
  &#8226;   <a href="#modules.AD_audit.privileged_users">modules.AD_audit.privileged_users</a>
  &#8226;   <a href="#modules.AD_audit.service_accounts">modules.AD_audit.service_accounts</a>
+ &#8226;   <a href="#modules.AD_audit.spn_exposure">modules.AD_audit.spn_exposure</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#typing">typing</a>
 
@@ -17861,6 +18005,24 @@ imports:
     <a href="#ldap3">ldap3</a>
  &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
  &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.AD_audit">modules.AD_audit</a>
+ &#8226;   <a href="#modules.AD_audit.runner">modules.AD_audit.runner</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.AD_audit.spn_exposure"></a>
+  <a target="code" href="///C:/Users/magla/OneDrive/Documents/cyber_audit/modules/AD_audit/spn_exposure.py" type="text/plain"><tt>modules.AD_audit.spn_exposure</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ldap3">ldap3</a>
+ &#8226;   <a href="#modules.AD_audit">modules.AD_audit</a>
 
   </div>
   <div class="import">
@@ -26374,6 +26536,8 @@ imported by:
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#lzma">lzma</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
+ &#8226;   <a href="#modules.AD_audit.admin_group_check">modules.AD_audit.admin_group_check</a>
+ &#8226;   <a href="#modules.AD_audit.delegation_check">modules.AD_audit.delegation_check</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
  &#8226;   <a href="#modules.standard_audit.auto_updater">modules.standard_audit.auto_updater</a>
  &#8226;   <a href="#modules.standard_audit.network_scan">modules.standard_audit.network_scan</a>
@@ -33668,7 +33832,7 @@ imported by:
  &#8226;   <a href="#ldap3.strategy.restartable">ldap3.strategy.restartable</a>
  &#8226;   <a href="#ldap3.strategy.sync">ldap3.strategy.sync</a>
  &#8226;   <a href="#ldap3.utils.ntlm">ldap3.utils.ntlm</a>
- &#8226;   <a href="#modules.AD_audit.privileged_users">modules.AD_audit.privileged_users</a>
+ &#8226;   <a href="#modules.AD_audit.gpo_link_check">modules.AD_audit.gpo_link_check</a>
  &#8226;   <a href="#modules.gui_audit_view">modules.gui_audit_view</a>
  &#8226;   <a href="#modules.standard_audit.banner_grabber">modules.standard_audit.banner_grabber</a>
  &#8226;   <a href="#modules.standard_audit.firewall_check">modules.standard_audit.firewall_check</a>
@@ -35085,6 +35249,8 @@ imported by:
  &#8226;   <a href="#gui.py">gui.py</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#logging">logging</a>
+ &#8226;   <a href="#modules.AD_audit.domain_trust">modules.AD_audit.domain_trust</a>
+ &#8226;   <a href="#modules.AD_audit.password_expiry">modules.AD_audit.password_expiry</a>
  &#8226;   <a href="#multiprocessing.managers">multiprocessing.managers</a>
  &#8226;   <a href="#multiprocessing.pool">multiprocessing.pool</a>
  &#8226;   <a href="#multiprocessing.process">multiprocessing.process</a>

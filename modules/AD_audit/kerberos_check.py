@@ -1,4 +1,4 @@
-import ldap3
+# modules/AD_audit/kerberos_check.py
 from ldap3 import Server, Connection, ALL, NTLM, SUBTREE
 from typing import Dict
 

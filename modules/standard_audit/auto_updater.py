@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import messagebox
 from modules.standard_audit.version_checker import check_latest_version
 
-APP_VERSION = "2.1.0"  # Update this on each release
+APP_VERSION = "2.1.2"  # Update this on each release
 VERSION_URL = "https://raw.githubusercontent.com/LepandSteve/Cyber-audit-tool/main/version.json"
 
 def run_auto_updater():
